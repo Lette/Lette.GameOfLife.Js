@@ -1,0 +1,15 @@
+body {
+    text-align: center;
+    font-family: monospace;
+    background: black;
+    color: white;
+}
+
+h1 {
+    font-size: medium;
+}
+
+div#controls {
+    display: none;
+    margin-top: 8px;
+}
