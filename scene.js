@@ -1,11 +1,12 @@
 /// <reference path="config.js" />
 
-var Scene = function(/* context2d */ _) {
+var Scene = function(/* context2d */ _, ratioSpan) {
 
     var cellSize = Settings.cellSize;
     var gridSize = Settings.gridSize;
     var width = Settings.width;
     var height = Settings.height;
+    //var span = this.ratioSpan;
 
     this.drawGrid = function() {
         _.lineWidth = 1;
@@ -49,6 +50,12 @@ var Scene = function(/* context2d */ _) {
                 this.fillCell(x, y, cell.isAlive, cell.age);
             }
         }
+
+        var ratio = state.liveCells / (Settings.gridSize * Settings.gridSize);
+        var aggRatio = state.aggLiveCells / state.aggCells;
+        ratioSpan.text(state.aggLiveCells + " " + aggRatio.toFixed(4));
+
+        return state.liveCells != 0;
     }
 
     this.Init = function() {

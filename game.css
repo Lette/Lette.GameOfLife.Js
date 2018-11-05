@@ -13,3 +13,7 @@ div#controls {
     display: none;
     margin-top: 8px;
 }
+
+input[type="button"] {
+    width: 10em;
+}

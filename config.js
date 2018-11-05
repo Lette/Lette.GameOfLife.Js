@@ -1,18 +1,18 @@
 
 var Settings = new (function (){
 
-    this.cellSize = 9;
-    this.gridSize = 100;
+    this.cellSize = 12;
+    this.gridSize = 60;
     this.cellMargin = 2;
 
-    this.randomizedLiveCellCount = 4800;
+    this.randomizedLiveCellRatio = 0.4;
 
     this.height = this.width = this.cellSize * this.gridSize + 1;
 
     this.speed = 0;
     this.wrapAroundEdges = true;
 
-    this.maximumAge = 20;
+    this.maximumAge = 9;
     this.maximumAgeDelta = 8;
 
 })();

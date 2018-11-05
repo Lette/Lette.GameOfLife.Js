@@ -3,50 +3,36 @@
 /// <reference path="state.js" />
 /// <reference path="scene.js" />
 
-
-var createRandomState = function(liveCellCount) {
-    var state = new State();
-
-    var getRandom = function(max) {
-        return Math.floor(Math.random() * max);
-    }
-
-    for (var i = 0; i < liveCellCount; i++) {
-        var x = getRandom(Settings.gridSize);
-        var y = getRandom(Settings.gridSize);
-
-        state.setCell(x, y, true); 
-    }
-
-    return state;
-}
-
-var randomize = function(n) {
-    var state = createRandomState(n);
-
-}
-
 var App = function(scene) {
     this.scene = scene;
     this.state = new State();
     this.timeoutId = 0;
 
-    this.randomize = function(liveCellCount) {
-        this.state = createRandomState(liveCellCount);
+    this.randomize = function() {
+        this.state = StateFactory.createRandom();
+        this.scene.update(this.state);
+    }
+
+    this.showDone = function() {
+        this.state = StateFactory.createDone();
         this.scene.update(this.state);
     }
 
     this.step = function() {
         this.state = this.state.getNextState();
-        this.scene.update(this.state);
+        return this.scene.update(this.state);
     }
 
     this.keepPlaying = function(app) {
         if (app.timeoutId == 0) {
             return;
         }
-        app.step();
-        app.timeoutId = setTimeout(app.keepPlaying, Settings.speed, app);
+        if (app.step()) {
+            app.timeoutId = setTimeout(app.keepPlaying, Settings.speed, app);
+        } else {
+            app.stop();
+            app.showDone();
+        }
     }
 
     this.play = function() {
@@ -64,6 +50,21 @@ var App = function(scene) {
         clearTimeout(this.timeoutId);
         this.timeoutId = 0;
     }
+
+    this.togglePlay = function()
+    {
+        if (this.timeoutId == 0) {
+            this.play();
+        } else {
+            this.stop();
+        }
+    }
+
+    this.showLogo = function() {
+        this.stop();
+        this.state = StateFactory.createLogo();
+        this.scene.update(this.state);
+    }
 }
 
 $(document).ready(function() {
@@ -71,14 +72,15 @@ $(document).ready(function() {
     canvas.attr("width", Settings.width);
     canvas.attr("height", Settings.height);
     var context = canvas[0].getContext("2d");
+    var ratioSpan = $("#ratio");
 
-    var scene = new Scene(context);
+    var scene = new Scene(context, ratioSpan);
     var app = new App(scene);
 
-    app.randomize(Settings.randomizedLiveCellCount);    
+    app.showLogo();    
 
     $("#randomizeButton").click(function() {
-        app.randomize(Settings.randomizedLiveCellCount);    
+        app.randomize();    
     });
 
     $("#stepButton").click(function() {
@@ -91,6 +93,18 @@ $(document).ready(function() {
 
     $("#stopButton").click(function() {
         app.stop();
+    });
+
+    $(document).keypress(function(e) {
+        if (e.which === 114) {
+            app.randomize();
+        } else if (e.which === 115) {
+            app.step();
+        } else if (e.which === 112) {
+            app.togglePlay();
+        } else if (e.which === 108) {
+            app.showLogo();
+        }
     });
 
     var controls = $("#controls");
