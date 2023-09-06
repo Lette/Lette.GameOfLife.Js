@@ -1,4 +1,4 @@
-/// <reference path="jquery-3.1.1.js" />
+/// <reference path="jquery-3.7.1.js" />
 /// <reference path="config.js" />
 /// <reference path="state.js" />
 /// <reference path="scene.js" />
@@ -67,7 +67,7 @@ var App = function(scene) {
     }
 }
 
-$(document).ready(function() {
+$(function() {
     var canvas = $("#canvas");
     canvas.attr("width", Settings.width);
     canvas.attr("height", Settings.height);
@@ -77,25 +77,25 @@ $(document).ready(function() {
     var scene = new Scene(context, ratioSpan);
     var app = new App(scene);
 
-    app.showLogo();    
+    app.showLogo();
 
-    $("#randomizeButton").click(function() {
-        app.randomize();    
+    $("#randomizeButton").on("click", function() {
+        app.randomize();
     });
 
-    $("#stepButton").click(function() {
+    $("#stepButton").on("click", function() {
         app.step();
     });
 
-    $("#playButton").click(function() {
+    $("#playButton").on("click", function() {
         app.play();
     });
 
-    $("#stopButton").click(function() {
+    $("#stopButton").on("click", function() {
         app.stop();
     });
 
-    $(document).keypress(function(e) {
+    $(document).on("keypress", function(e) {
         if (e.which === 114) {
             app.randomize();
         } else if (e.which === 115) {
